@@ -1,0 +1,30 @@
+.left_nav {
+    float: left;
+    height: 642px;
+    width: 200px;
+}
+
+.left_nav a {
+    color:white;
+}
+
+.left_nav ul {
+    height: 100%;
+}
+
+.nav>li>a:hover {
+    background-color: #337AB7;
+}
+
+.nav>li>a:visited {
+    background-color: #337AB7;
+}
+
+.data_show {
+    float:left;
+}
+
+.frame {
+    border:0px;
+    width: 600px;
+}
