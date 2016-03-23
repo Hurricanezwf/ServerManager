@@ -10,11 +10,18 @@
     <title>服务器状态</title>
     <style type="text/css">
        html body {
-            margin-left: 8px;
+            margin-left: 12px;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 14px;
             color: #333;
-            overflow:hidden;
+        }
+
+        .ok {
+            color: green;
+        }
+        
+        .failed {
+            color: red;
         }
 
     </style>
@@ -22,8 +29,18 @@
 
 <body>
     <h3>SERVER STATUS</h3><hr><br>
-    <p>BuildAssist&nbsp;&nbsp; .................................[{{.BuildAssist}}]</p>
-    <p>login_server .................................[{{.login_server}}]</p>
+    <?php
+        require_once '../controllers/status_interface.php';
+
+        $res = check_all_servers();
+        foreach ($res as $server => $status) {
+            if ($status == 1) {
+                echo "<p class='ok'>$server.........................................[OK]</p>";
+            } else {
+                echo "<p class='failed'>$server .........................................[FAILED]</p>";    
+            }
+        }
+    ?>
 </body>
 
 </html>

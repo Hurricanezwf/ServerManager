@@ -3,7 +3,7 @@ $(document).ready(function(){
         var choice = $(this).html();
         switch (choice) {
         case "状态监控":
-            $(".frame").attr("src", "/ServerManager/controllers/status.php");
+            $(".frame").attr("src", "/ServerManager/views/status.php");
             break;
         case "编译":
             $(".frame").attr("src", "/ServerManager/controllers/build.php");
