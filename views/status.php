@@ -28,11 +28,13 @@
 </head>
 
 <body>
-    <h3>SERVER STATUS</h3><hr><br>
     <?php
         require_once '../controllers/status_interface.php';
 
-        $res = check_all_servers();
+        $group_name = $_GET["group"];
+        echo "<h3>$group_name servers status</h3><hr><br>";
+
+        $res = check_all_servers($group_name);
         foreach ($res as $server => $status) {
             if ($status == 1) {
                 echo "<p class='ok'>$server.........................................[OK]</p>";
@@ -40,6 +42,7 @@
                 echo "<p class='failed'>$server .........................................[FAILED]</p>";    
             }
         }
+
     ?>
 </body>
 
