@@ -21,6 +21,7 @@ $(function(){
 
 $(document).ready(function(){
     setInterval("query_all_server_status()", 5000);
+    setInterval("update_status()", 5000);
 });
     
 
@@ -35,7 +36,7 @@ function query_all_server_status() {
                 var state = JSON.parse(data);
                 var isAlarm = false;
                 for (server_group in state) {
-                    server_state = state[server_group]; 
+                    /*server_state = state[server_group]; 
                     for (server in server_state) {
                         var single_server_state = server_state[server];
                         if (single_server_state <= 0) {
@@ -43,7 +44,9 @@ function query_all_server_status() {
                             isAlarm = true;
                         }
                         break;
-                    }
+                    }*/
+                    alert_server_dump(server_group);
+                    isAlarm = true;
                 }
 
                 if (isAlarm) {
@@ -51,6 +54,19 @@ function query_all_server_status() {
                 }
             }
           );
+}
+
+function update_status() {
+    var active_server_group = $(".menu_chioce").first().parent().attr("class");
+    var data_show = $(".status_show").attr("src");
+    var is_update_status = false;
+    if (data_show != null) {
+        is_update_status = data_show.match("status") != null ? true:false;
+    }
+
+    if (is_update_status) {
+        $(".status_show").attr("src", "status.php?group="+active_server_group);
+    }
 }
 
 

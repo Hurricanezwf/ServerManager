@@ -1,6 +1,21 @@
 <?php
 
 // 检测N组服务器的状态
+// json结构
+// {
+//      "test" : {
+//          "login_server" : {
+//              "state" : 0,
+//              "memory": 8, (单位Mb)
+//              "cpu"   : 1.1(百分比)
+//          },
+//          "gate_server" : {
+//              "state" : 1,
+//              "memory": 2,
+//              "cpu"   : 3
+//          }
+//      }
+// }
 function check_all_groups() {
    $ini = parse_ini_file('../conf/cfg.ini'); 
 
@@ -19,6 +34,19 @@ function check_all_groups() {
 }
 
 // 检测一组服务器的状态
+// json结构
+// {
+//      "login_server" : {
+//          "state" : 0,
+//          "memory": 1,
+//          "cpu"   : 2.2
+//      },
+//      "gate_server" : {
+//          "state" : 0,
+//          "memory": 1,
+//          "cpu"   : 3
+//      },
+// }
 function check_all_servers($group_name) {
     $ini = parse_ini_file('../conf/cfg.ini', true);
     $group_ini = $ini[$group_name];
@@ -44,12 +72,52 @@ function check_all_servers($group_name) {
 // @param $server_name    服务器名称,如login_server
 // @param $user_uid       linux账户uid, 如501
 function check_single_server($server_name, $user_uid) {
-    $res = shell_exec("ps -ef | grep '$user_uid' | grep '$server_name' | grep -v 'grep' | wc -l");
-    if ($res == 1) {
-        return 1;
+    $single_server = array();
+
+    $res = shell_exec("ps -ef | grep '$user_uid' | grep '$server_name' | grep -v 'grep' | grep -v 'gdb' | wc -l");
+    $single_server["state"] = ($res == 1 ? 1 : 0);
+
+    $pid = get_process_pid($server_name, $user_uid);
+    if ($pid != null && $pid != "" && $pid > 0) {
+        $single_server["memory"] = get_memory_usage($pid);
+        $single_server["cpu"]    = get_cpu_usage($pid);
+    } else {
+        $single_server["memory"] = "--";
+        $single_server["cpu"]    = "--";
     }
-    return 0;
+
+    return $single_server;
 }
 
+function get_process_pid($process_name, $user_uid) {
+    if ($process_name == null || $user_uid == null) {
+        printf("[E] get process pid failed! param not enough \n");
+        return -1;
+    }
 
+    $cmd = sprintf("ps -ef -u %s | grep %s | grep -v 'grep' | grep -v 'vim' | grep -v 'gdb' | grep -v 'tail' | awk '{print $2}'", $user_uid, $process_name);
+    return shell_exec($cmd);
+}
+
+function get_cpu_usage($pid) {
+    if ($pid == null) {
+        printf("[E] get cpu usage failed! param not enough \n");
+        return "";
+    }
+
+    $cmd = sprintf("ps -o pcpu -p %d | grep -v 'CPU' | awk '{print $1}'", $pid);
+    return shell_exec($cmd);
+}
+
+function get_memory_usage($pid) {
+    if ($pid == null) {
+        printf("[E] get memory usage failed! param not enough \n");
+        return "";
+    }
+
+    $cmd = sprintf("ps -o vsz -p %d | grep -v VSZ", $pid);
+    $mem_kb = shell_exec($cmd);
+    $mem_mb = $mem_kb/(1024*8);
+    return number_format($mem_mb, 2);
+}
 ?>

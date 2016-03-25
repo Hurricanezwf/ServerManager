@@ -34,15 +34,32 @@
         $group_name = $_GET["group"];
         echo "<h3>$group_name servers status</h3><hr><br>";
 
+        $table  = "<table><tr>";
+        $table .= "<th>server_name</th>";
+        $table .= "<th>state</th>";
+        $table .= "<th>memory(MB)</th>";
+        $table .= "<th>CPU(%)</th>";
+
         $res = check_all_servers($group_name);
         foreach ($res as $server => $status) {
-            if ($status == 1) {
-                echo "<p class='ok'>$server.........................................[OK]</p>";
+            $table .= "<tr>";
+            $table .= "<td>$server</td>";
+
+            if ($status["state"] == 1) {
+                $table .= "<td class='ok'>RUN</td>";
             } else {
-                echo "<p class='failed'>$server .........................................[FAILED]</p>";    
+                $table .= "<td class='failed'>STOP</td>";
             }
+
+            $mem = $status['memory'];
+            $cpu = $status['cpu'];
+            $table .= "<td>$mem</td>";
+            $table .= "<td>$cpu</td>";
+            $table .= "</tr>";
         }
 
+        $table .= "</tr></table>";
+        echo $table;
     ?>
 </body>
 
