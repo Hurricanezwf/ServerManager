@@ -1,4 +1,5 @@
 <?php
+require_once 'http.php';
 
 // 检测N组服务器的状态
 // json结构
@@ -120,4 +121,70 @@ function get_memory_usage($pid) {
     $mem_mb = $mem_kb/(1024*8);
     return number_format($mem_mb, 2);
 }
+
+
+
+// 返回的json格式:
+// {
+//      [{
+//          "host_id" : 1,
+//          "group_id": 100,
+//          "status_info": {
+//              "login_server" : {
+//                  "state" : 0,  //"--"表示超时或未找到
+//                  "memory": 82,
+//                  "cpu"   : 1.1
+//              },
+//              "gate_server" : {
+//                  ...
+//              }
+//          }
+//      },
+//      {
+//          "host_id" : 1,
+//          "group_id": 101,
+//          "status_info": {
+//              "login_server" : {
+//                  "state" : 0,
+//                  "memory": 82,
+//                  "cpu"   : 1.1
+//              },
+//              "gate_server" : {
+//                  ...
+//              }
+//          }
+//      }]
+// }
+function get_server_status() {
+    $reply = array();
+    $http  = new http();
+    $xml = simplexml_load_file("../conf/servers.xml");
+    foreach ($xml->children() as $host) {
+        $ip = $host->host_ip;
+        $monitor_list = $host->monitor_list;
+        foreach ($monitor_list->children() as $monitor_single) {
+            if ($monitor_single->switcher == 1) {
+                $port = $monitor_single->port;
+
+                $url = "http://$ip:$port";
+                $req = array(
+                    "cmd" => "http_get_all_status_req",
+                    "data"=> "",    
+                );
+                $json = json_encode($req);
+                $res = $http->PostReq($url, $json);
+
+                $single_group_status["host_id"] = "$host->host_id";
+                $single_group_status["group_id"] = "$monitor_single->group_id";
+                $single_group_status["status_info"] = $res;
+
+                array_push($reply, $single_group_status);
+            }
+        }
+        break;
+    }
+
+    return json_encode($reply);
+}
+
 ?>
