@@ -8,9 +8,9 @@ class http {
             curl_setopt($this->curl, CURLOPT_HEADER, 0);
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($this->curl, CURLOPT_POST, 1);
-            curl_setopt($this->curl, CURLOPT_TIMEOUT, 1);
+            curl_setopt($this->curl, CURLOPT_TIMEOUT, 0);
             curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT_MS, 1000);
-            curl_setopt($this->curl, CURLOPT_TIMEOUT_MS, 1000);
+            //curl_setopt($this->curl, CURLOPT_TIMEOUT_MS, 5000);
         }
     }
 
@@ -21,72 +21,33 @@ class http {
         }
     }
 
-    // Req Json Format:
+    // @return: 
+    // 成功返回json字符串, 失败返回FALSE
+    // json 
     // {
-    //     "cmd" : "",
-    //     "data": {
-    //         ...
-    //     }
-    // }
-    //
-    // Res Json Format:
-    // {
-    //     "code" : 0,
+    //     "reply_code" : 1,
     //     "data" : {
-    //         ...
+    //         ....
     //     }
     // }
-    //
-    // @return Object
-    // [{
-    //     "login_server": {
-    //         "state" : 1,
-    //         "memory": 100,
-    //         "cpu"   : 1.1
-    //     },
-    //     "gate_server" : {
-    //          ...
-    //     }
-    // }]
     function PostReq($target_url, $json_data) {
-        do {
-            if (!is_null($this->curl)) {
-                curl_setopt($this->curl, CURLOPT_URL, $target_url);
-                curl_setopt($this->curl, CURLOPT_POSTFIELDS, $json_data);
+        if (!is_null($this->curl)) {
+            curl_setopt($this->curl, CURLOPT_URL, $target_url);
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $json_data);
 
-                $res = curl_exec($this->curl);
-                if ($res === FALSE) {
-                    printf("[E] exec result is false!"); 
-                    break;
-                }
-
-                $reply = json_decode($res);
-                if ($reply->reply_code > 0) {
-                    printf("[E] Reply Code > 0 \n");
-                    break;
-                }
-
-                return $reply->data;
+            $res = curl_exec($this->curl);
+            if ($res === FALSE) {
+                printf("[E] exec result is false! Msg:%s\n", curl_error($this->curl)); 
+                return FALSE;
             }
-        } while(0);
 
-        $err_ret = array(
-            'state' => 'err',    
-            'memory'=> 'err',
-            'cpu'   => 'err',
-        );
-        return $err_ret;
+            $reply = json_decode($res);
+            return $reply;
+        }
+
+        printf("[E] post request failed! curl is null \n");
+        return FALSE;
     }
-}
 
-
-// for unit test
-function testHttp() {
-    $http = new http();
-    $a = array("name"=>"zwf");
-    $json = json_encode($a);
-    $res = $http->PostReq("http://123.56.133.116:8085/status", $json);
-    print_r($res);
-    echo "\n";
-}
+} // end of class
 ?>
