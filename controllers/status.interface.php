@@ -57,7 +57,7 @@ function get_server_status() {
                     $single_group_status["status_info"] = $res->data;
                 } else {
                     printf("[E] $res->reply_code \n");
-                    $single_group_status["status_info"] = "err";
+                    $single_group_status["status_info"] = "";
                 }
 
                 array_push($reply, $single_group_status);
@@ -66,7 +66,7 @@ function get_server_status() {
         break;
     }
 
-    return json_encode($reply);
+    return $reply;
 }
 
 // @param $is_stop_when_failed: 服务器组开启失败时, 是否关闭单个server_list

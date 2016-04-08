@@ -7,8 +7,7 @@ require_once 'email.class.php';
 //sendmailto($mailto, $subject, $body);
 
 
-function sendmailto($mailto, $mailsub, $mailbd)
-{
+function sendmailto($mailto, $mailsub, $mailbd) {
     if (!file_exists("../conf/cfg.ini")) {
         echo "ini file not exist!";
         return false;

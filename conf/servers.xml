@@ -9,11 +9,11 @@
                 <switcher>1</switcher><!--监控开关, 0为off  1为on-->
                 <group_id>4</group_id><!--服务器组id, 与server.xml中配置要相同-->
                 <group_name>上海1服</group_name>
-                <port>10</port>
+                <port>11060</port>
             </monitor_single>
 
             <monitor_single>
-                <switcher>1</switcher>
+                <switcher>0</switcher>
                 <group_id>5</group_id>
                 <group_name>上海2服</group_name>
                 <port>30</port>
