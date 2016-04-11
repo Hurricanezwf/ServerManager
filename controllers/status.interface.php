@@ -2,7 +2,7 @@
 require_once 'http.php';
 
 // 正确的返回的json格式:
-// 出错时, "status_info" : "err"
+// 出错时, "status_info" : ""
 // {
 //      [{
 //          "host_id" : 1,
@@ -67,6 +67,25 @@ function get_server_status() {
     }
 
     return $reply;
+}
+
+
+// $host_id and $group_id is a number
+function get_group_name($host_id, $group_id) {
+    $xml = simplexml_load_file("../conf/servers.xml");
+    foreach ($xml->children() as $host) {
+        if ($host->host_id == $host_id) {
+            $monitor_list = $host->monitor_list;
+            foreach ($monitor_list->children() as $monitor_single) {
+                if ($monitor_single->group_id == $group_id) {
+                    $name = $monitor_single->group_name;
+                    return $name;
+                }
+            }
+        }
+    }
+
+    return "";
 }
 
 // @param $is_stop_when_failed: 服务器组开启失败时, 是否关闭单个server_list
