@@ -56,14 +56,12 @@ function get_server_status() {
                 if ($res != FALSE && $res->reply_code == 0) {
                     $single_group_status["status_info"] = $res->data;
                 } else {
-                    printf("[E] $res->reply_code \n");
                     $single_group_status["status_info"] = "";
                 }
 
                 array_push($reply, $single_group_status);
             }
         }
-        break;
     }
 
     return $reply;

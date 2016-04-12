@@ -107,3 +107,7 @@ body {
 .server_title {
     font-size: 18px;
 }
+
+.server_dump {
+    background-color:red;
+}

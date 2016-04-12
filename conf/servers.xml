@@ -21,4 +21,18 @@
         </monitor_list>
     </host>
 
+    <!--host><!--单台主机-->
+        <host_id>2</host_id>
+        <host_name>bj02.sq.com</host_name>
+        <host_ip>123.56.133.116</host_ip>
+        <monitor_list>
+            <monitor_single>
+                <switcher>1</switcher><!--监控开关, 0为off  1为on-->
+                <group_id>4</group_id><!--服务器组id, 与server.xml中配置要相同-->
+                <group_name>北京1服</group_name>
+                <port>11060</port>
+            </monitor_single>
+        </monitor_list>
+    </host-->
+
 </servers>

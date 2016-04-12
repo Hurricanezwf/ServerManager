@@ -9,7 +9,6 @@ require_once 'email.class.php';
 
 function sendmailto($mailto, $mailsub, $mailbd) {
     if (!file_exists("../conf/cfg.ini")) {
-        echo "ini file not exist!";
         return false;
     }
     $ini = parse_ini_file("../conf/cfg.ini", true);
@@ -29,7 +28,7 @@ function sendmailto($mailto, $mailsub, $mailbd) {
     
 
     $smtp        = new smtp($smtpserver, $smtpserverport, true, $smtpuser, $smtppass); //这里面的一个true表示身份验证, 否则不使用身份验证
-    $smtp->debug = TRUE; //是否显示发送的调试信息
+    $smtp->debug = FALSE; //是否显示发送的调试信息
     $state = $smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype);
     if ($state == "") {
         return false;

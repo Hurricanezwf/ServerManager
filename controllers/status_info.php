@@ -4,8 +4,7 @@ require_once 'mail.php';
 
 // 前端获取服务器状态信息逻辑
 $status_info = get_server_status();
-//echo json_encode($status_info);
-echo "\n";
+echo json_encode($status_info);
 
 // send mail
 $bad_servers = get_bad_server($status_info);
@@ -13,10 +12,8 @@ $is_all_server_ok = 0;
 if (empty($bad_servers)) {
     $is_all_server_ok = 1;
 }
-//echo "is_all_server_ok=$is_all_server_ok\n";
 
 $is_send = is_send_mail($is_all_server_ok);
-//echo "is_send=$is_send\n";
 if ($is_send) {
     $ini = parse_ini_file("../conf/cfg.ini", true);
     $email_receivers = $ini['mail']['email_receivers'];
@@ -24,7 +21,6 @@ if ($is_send) {
 
     foreach ($receivers_array as $receiver) {
         trim($receiver);
-        echo "send mail to $receiver!\n";
         $res = false;
         if ($is_all_server_ok == 0) {
             $mailsub  = "Server Dump";
@@ -35,13 +31,8 @@ if ($is_send) {
             $mailbody = "All server recover to normal";
             $res = sendmailto($receiver, $mailsub, $mailbody);
         }
-        if ($res == false) {
-            echo "send mail to $receiver failed\n";
-        }
     }
 }
-
-
 
 
 // @param $status_info: all server's status_info object
@@ -66,12 +57,11 @@ function get_bad_server($status_info) {
 
         $group_status_info_array = $single_group_info['status_info'];
         if (empty($group_status_info_array)) {
-            printf("host[%d] group[%d] monitor is not run. \n", $single_group_info['host_id'], $single_group_info['group_id']);
             $bad_servers["err"] = "monitor_server is not run";
         } else {
             foreach ($group_status_info_array as $group_detail) {
                 foreach ($group_detail as $server_name => $detail) {
-                    if ($detail->state != 1) {
+                    if ($detail->state != "1") {
                         $bad_servers[$server_name] = (string)$detail->state;
                     }
                 }
@@ -98,7 +88,8 @@ function get_bad_server($status_info) {
 function is_send_mail($is_all_server_ok) {
     $file_path = "../cache/status.cache";
     if (!file_exists("$file_path")) {
-        shell_exec("touch $file_path");
+        $file = fopen("$file_path", "w") or die("create file failed!");
+        fclose($file);
     }
 
     $cache = fopen("$file_path", "rb") or die("open file failed!");

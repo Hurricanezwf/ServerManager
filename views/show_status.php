@@ -8,7 +8,7 @@ foreach ($status_info as $single_group_status) {
     $display_hostid = "host" . $host_id;
     $table_id = "_" . "$host_id" . "_" . "$group_id";
 
-    echo "<div class='row' data-hostid='$display_hostid'>";
+    echo "<div class='row server_row $display_hostid'>";
     echo      "<span class='server_title'>$group_name</span>";
     echo      "<span class='glyphicon glyphicon-menu-down pull-right'></span>";
     echo      "<div id='$table_id' class='table-responsive'>";
@@ -25,10 +25,10 @@ foreach ($status_info as $single_group_status) {
         foreach ($group_detail as $single_process) {
             foreach ($single_process as $server_name => $server_data) {
                 $tr = "<tr>";
-                $tr .= "<td>$server_name</td>";
-                $tr .= "<td>$server_data->state</td>";
-                $tr .= "<td>$server_data->cpu</td>";
-                $tr .= "<td>$server_data->memory</td>";
+                $tr .= "<td class='name'>$server_name</td>";
+                $tr .= "<td class='state'>$server_data->state</td>";
+                $tr .= "<td class='cpu'>$server_data->cpu</td>";
+                $tr .= "<td class='memory'>$server_data->memory</td>";
                 $tr .= "</tr>";
                 echo $tr;
             }
@@ -36,6 +36,7 @@ foreach ($status_info as $single_group_status) {
     }
     echo            "</table>";
     echo      "</div>";
+    echo      "<hr>";
     echo "</div>";
 }
 ?>

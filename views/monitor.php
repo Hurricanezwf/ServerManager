@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -21,6 +21,7 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 BindEvent();
+                setInterval("StartMonitor()", 3000);
             });
         </script>
     </head>
@@ -43,7 +44,7 @@
                         foreach ($xml->children() as $host) {
                             $host_id   = "host" . $host->host_id;
                             $host_name = $host->host_name;
-                            echo "<li data-hostid='$host_id'><a href='#'>$host_name</a></li>";
+                            echo "<li id='$host_id'><a href='#'>$host_name</a></li>";
                         }
                         ?>
                     </ul>
@@ -51,37 +52,10 @@
                 
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                     <h1 class="page-header">Dashboard</h1>
-                    <?php require_once 'show_status.php';?>
-                    
-                    <!--div class="row" data-hostid='host1'>
-                        <div class="col-sm-12 col-md-12">
-                            <span class="server_title">上海1服</span>
-                            <span class="glyphicon glyphicon-menu-down pull-right"></span>
-                            <div id="_1_3" class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                          <th>process</th>
-                                          <th>STATE</th>
-                                          <th>CPU(%)</th>
-                                          <th>MEMORY(MB)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                          <td>login_server</td>
-                                          <td>1</td>
-                                          <td>1</td>
-                                          <td>120</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                          <hr>
-                        </div>
-                    </div-->
+                    <?php require_once 'show_status.php'; ?>
                 </div>
             </div>
         </div>
+        <audio src="" autoplay="autoplay" display="none"></audio>
     </body>
 </html>
