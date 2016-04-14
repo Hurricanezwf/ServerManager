@@ -12,18 +12,21 @@
         
         <title>monitor</title>
 
-        <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="../static/css/dashboard.css" rel="stylesheet">
+        <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
+        <link href="../static/css/dashboard.css" rel="stylesheet"></link>
+        <link href="../static/css/switch.css" rel="stylesheet"></link>
+
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="../static/js/jquery-2.2.1.min.js"></script>
         <script src="../static/bootstrap/js/bootstrap.min.js"></script>
         <script src="../static/js/monitor.js"></script>
         <script type="text/javascript">
-            $(document).ready(function(){
-                BindEvent();
-                setInterval("StartMonitor()", 3000);
-            });
+        $(document).ready(function(){
+            BindEvent();
+            setInterval("StartMonitor()", 3000);
+        });
         </script>
+
     </head>
     
     <body>

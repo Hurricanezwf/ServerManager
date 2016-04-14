@@ -6,9 +6,10 @@ foreach ($status_info as $single_group_status) {
     $group_id = $single_group_status['group_id'];
     $group_name = get_group_name($host_id, $group_id);
     $display_hostid = "host" . $host_id;
-    $table_id = "_" . "$host_id" . "_" . "$group_id";
+    $table_id = "_" . "$host_id" . "_" . "$group_id";//mui-switch-animbg
 
     echo "<div class='row server_row $display_hostid'>";
+    echo      "<span class='server_switch'><label><input class='mui-switch' type='checkbox' /></label></span>";
     echo      "<span class='server_title'>$group_name</span>";
     echo      "<span class='glyphicon glyphicon-menu-down pull-right'></span>";
     echo      "<div id='$table_id' class='table-responsive'>";
@@ -20,6 +21,7 @@ foreach ($status_info as $single_group_status) {
     echo                    "<th>MEMORY(MB)</th>";
     echo               "</tr>";
 
+    $is_server_on = false;
     $group_detail = $single_group_status['status_info'];
     if (!empty($group_detail)) {
         foreach ($group_detail as $single_process) {
@@ -31,6 +33,10 @@ foreach ($status_info as $single_group_status) {
                 $tr .= "<td class='memory'>$server_data->memory</td>";
                 $tr .= "</tr>";
                 echo $tr;
+
+                if ($server_data->state == "1") {
+                    $is_server_on = true;
+                }
             }
         }
     }
@@ -38,5 +44,11 @@ foreach ($status_info as $single_group_status) {
     echo      "</div>";
     echo      "<hr>";
     echo "</div>";
+
+    if ($is_server_on) {
+        echo "<script type='text/javascript'>";
+        echo     "$('#$table_id').siblings('span.server_switch').find('input').attr('checked', true);";
+        echo "</script>";
+    }
 }
 ?>
