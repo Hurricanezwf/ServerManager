@@ -44,6 +44,7 @@ function BindEvent() {
             $(this).attr("checked", "checked");
         }
 
+        $(this).removeAttr("disabled");
         $.post("/ServerManager/controllers/start_stop.php",
             {
                 hostid  : param[1],
@@ -57,7 +58,6 @@ function BindEvent() {
             }
         );
         sleep(1);
-        $(this).removeAttr("disabled");
     });
 }
 
